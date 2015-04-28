@@ -13,5 +13,9 @@ public class Algorithms {
 		binaryAssign(machines.subList(machines.size()/2, machines.size()),
 				     tasks.subList(tasks.size()/2, tasks.size()));
 	}
+	
+	public static int getMax(List<Machine> machines) {
+		return Collections.max(machines).getProcessTime();
+	}
 
 }

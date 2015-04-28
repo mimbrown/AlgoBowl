@@ -26,6 +26,10 @@ public class Machine implements Comparable {
 		processTime /= speed;
 	}
 	
+	public int getProcessTime() {
+		return processTime;
+	}
+	
 	public String taskString() {
 		String toReturn = "";
 		for(Integer i : tasks) {

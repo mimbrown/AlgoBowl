@@ -1,18 +1,16 @@
-import java.awt.Color;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 
 public class Demo {
 	private int numMachines, numTasks;
-	private List<Machine> machines;
+	private List<Machine> machines, inOrderMachines;
 	private List<Integer> tasks;
 	private String fileName;
 	
 	public Demo() {
 		super();
-		fileName = "src/input.txt";
+		fileName = "ourInput.txt";
 		readFromFile();
 	}
 	
@@ -27,6 +25,7 @@ public class Demo {
 			System.exit(1);
 		}
 		machines = new ArrayList<Machine>();
+		inOrderMachines = new ArrayList<Machine>();
 		tasks = new ArrayList<Integer>();
 		numTasks = Integer.parseInt(in.nextLine());
 		numMachines = Integer.parseInt(in.nextLine());
@@ -44,19 +43,21 @@ public class Demo {
 		if(temp.length == numMachines) {
 			for(int i = 0; i < numMachines; i++) {
 				machines.add(new Machine(Integer.parseInt(temp[i])));
+				inOrderMachines.add(new Machine(Integer.parseInt(temp[i])));
 			}
 		}
 		else {
 			System.out.println("Mismatch on number of machines.");
 			System.exit(1);
 		}
+	}
+	
+	public int optimize() {
 		Collections.sort(tasks);
 		Collections.sort(machines);
 		Collections.reverse(tasks);
-	}
-	
-	public void optimize() {
 		Algorithms.binaryAssign(machines, tasks);
+		return Algorithms.getMax(machines);
 	}
 	
 	public void printOutput() {
@@ -64,11 +65,41 @@ public class Demo {
 			System.out.println(m);
 		}
 	}
+	
+	public void createInput() {
+		int mach = 50;
+		int tsks = 1000;
+		File file = null;
+		PrintWriter out = null;
+		try {
+			file = new File("ourInput.txt");
+			out = new PrintWriter(file);
+		} catch(IOException e) {
+			System.out.println(e.getMessage());
+		}
+		Random rand = new Random();
+		out.println(tsks);
+		out.println(mach);
+		for(int i = 0; i < tsks - 1; i++) {
+			out.print(rand.nextInt(10000)+1);
+			out.print(" ");
+		}
+		out.print(rand.nextInt(10000)+1);
+		out.print("\n");
+		for(int i = 0; i < mach - 1; i++) {
+			out.print(rand.nextInt(20)+1);
+			out.print(" ");
+		}
+		out.print(rand.nextInt(20)+1);
+		out.close();
+	}
 
 	public static void main(String[] args) {
 		Demo demo = new Demo();
-		demo.optimize();
+		demo.createInput();
+		int max = demo.optimize();
 		demo.printOutput();
+		System.out.println(max);
 	}
 
 }
