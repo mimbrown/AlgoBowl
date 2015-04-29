@@ -5,20 +5,20 @@ import java.util.*;
 public class Demo {
 	private int numMachines, numTasks;
 	private List<Machine> machines, inOrderMachines;
-	private List<Integer> tasks;
+	private List<Task> tasks;
 	private String fileName;
 	
 	public Demo() {
 		super();
 		fileName = "ourInput.txt";
-		readFromFile();
+		readFromFile(fileName);
 	}
 	
-	public void readFromFile() {
+	public void readFromFile(String file) {
 		FileReader reader = null;
 		Scanner in = null;
 		try {
-			reader = new FileReader(fileName);
+			reader = new FileReader(file);
 			in = new Scanner(reader);
 		} catch(FileNotFoundException e) {
 			System.out.println("Could not find the file.");
@@ -26,13 +26,13 @@ public class Demo {
 		}
 		machines = new ArrayList<Machine>();
 		inOrderMachines = new ArrayList<Machine>();
-		tasks = new ArrayList<Integer>();
+		tasks = new ArrayList<Task>();
 		numTasks = Integer.parseInt(in.nextLine());
 		numMachines = Integer.parseInt(in.nextLine());
 		String[] temp = in.nextLine().split(" ");
 		if(temp.length == numTasks) {
 			for(int i = 0; i < numTasks; i++) {
-				tasks.add(Integer.parseInt(temp[i]));
+				tasks.add(new Task(Integer.parseInt(temp[i]), i+1));
 			}
 		}
 		else {
@@ -42,8 +42,9 @@ public class Demo {
 		temp = in.nextLine().split(" ");
 		if(temp.length == numMachines) {
 			for(int i = 0; i < numMachines; i++) {
-				machines.add(new Machine(Integer.parseInt(temp[i])));
-				inOrderMachines.add(new Machine(Integer.parseInt(temp[i])));
+				Machine m = new Machine(Integer.parseInt(temp[i]));
+				machines.add(m);
+				inOrderMachines.add(m);
 			}
 		}
 		else {
@@ -93,13 +94,69 @@ public class Demo {
 		out.print(rand.nextInt(20)+1);
 		out.close();
 	}
+	
+	public void output() {
+		File file = null;
+		PrintWriter out = null;
+		try {
+			file = new File("ourOutput.txt");
+			out = new PrintWriter(file);
+		} catch(IOException e) {
+			System.out.println(e.getMessage());
+		}
+		int max = optimize();
+		for(Machine m : inOrderMachines) {
+			for(Task t : m.getTasks()) {
+				out.print(t.id);
+				out.print(" ");
+			}
+			out.print("\n");
+		}
+		out.println(max);
+		out.close();
+	}
+	
+	public boolean validate(String file) {
+		readFromFile(fileName);
+		FileReader reader = null;
+		Scanner in = null;
+		try {
+			reader = new FileReader(file);
+			in = new Scanner(reader);
+		} catch(FileNotFoundException e) {
+			System.out.println("Could not find the file.");
+			System.exit(1);
+		}
+		double maxCost = -1;
+		for(int i = 0; i < numMachines; i++) {
+			String[] temp = in.nextLine().split(" ");
+			double cost = 0;
+			for(int j = 0; j < temp.length; j++) {
+				int index = Integer.parseInt(temp[j]) - 1;
+				if(tasks.get(index) != null) {
+					cost += tasks.get(index).value;
+					tasks.set(index, null);
+				}
+				else return false;
+			}
+			cost /= machines.get(i).getSpeed();
+			if(cost > maxCost) maxCost = cost;
+		}
+		int theirMax = Integer.parseInt(in.nextLine());
+		in.close();
+		if(Math.abs(theirMax - maxCost) > 0.0001) return false;
+		for(Task t : tasks) {
+			if(t != null) return false;
+		}
+		return true;
+	}
 
 	public static void main(String[] args) {
 		Demo demo = new Demo();
-		demo.createInput();
-		int max = demo.optimize();
-		demo.printOutput();
-		System.out.println(max);
+		//demo.createInput();
+		demo.output();
+		boolean isWorking = demo.validate("ourOutput.txt");
+		System.out.println(isWorking);
 	}
 
 }

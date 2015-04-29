@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Algorithms {
 	
-	public static void binaryAssign(List<Machine> machines, List<Integer> tasks) {
+	public static void binaryAssign(List<Machine> machines, List<Task> tasks) {
 		if(machines.size() == 0 || tasks.size() == 0) return;
 		if(machines.size() == 1 || tasks.size() == 0) {
 			machines.get(0).addTasks(tasks);
