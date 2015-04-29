@@ -14,5 +14,11 @@ public class Task implements Comparable {
 		if(!(o instanceof Task)) return 0;
 		return value.compareTo(((Task)o).value);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof Task)) return false;
+		return id == ((Task)o).id;
+	}
 
 }

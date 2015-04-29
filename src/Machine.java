@@ -18,6 +18,38 @@ public class Machine implements Comparable {
 		calcProcessTime();
 	}
 	
+	public void addTask(Task t) {
+		this.tasks.add(t);
+		processTime += t.value/speed;
+	}
+	
+	public void removeTask(int index) {
+		processTime -= tasks.get(index).value/speed;
+		this.tasks.remove(index);
+	}
+	
+	public void replaceTask(Task thisT, Task otherT) {
+		for(int i = 0; i < tasks.size() - 1; i++) {
+			if(tasks.get(i).equals(thisT)) {
+				//processTime = processTime + (otherT.value - thisT.value)/speed;
+				tasks.remove(i);
+				tasks.add(i, otherT);
+				calcProcessTime();
+				return;
+			}
+		}
+	}
+	
+	public void removeTask(Task t) {
+		for(Task i : tasks) {
+			if(i.equals(t)) {
+				processTime -= t.value/speed;
+				tasks.remove(i);
+				return;
+			}
+		}
+	}
+	
 	public void calcProcessTime() {
 		processTime = 0.0;
 		for(Task i : tasks) {

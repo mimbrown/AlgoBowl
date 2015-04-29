@@ -59,8 +59,10 @@ public class Demo {
 		Collections.reverse(tasks);
 		Algorithms.altAlgo(machines, tasks);
 		//Algorithms.binaryAssign(machines, tasks);
-		//Collections.sort(machines);
-		//Algorithms.normMachines(machines);
+		for(int i = 0; i < 100; i++) {
+			Collections.sort(machines);
+			Algorithms.normMachines(machines);
+		}
 		return Algorithms.getMax(machines);
 	}
 	
@@ -71,12 +73,12 @@ public class Demo {
 	}
 	
 	public void createInput() {
-		int mach = 50;
+		int mach = 2;
 		int tsks = 1000;
 		File file = null;
 		PrintWriter out = null;
 		try {
-			file = new File("ourInput.txt");
+			file = new File("ourInput2.txt");
 			out = new PrintWriter(file);
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
@@ -140,19 +142,31 @@ public class Demo {
 					cost += tasks.get(index).value;
 					tasks.set(index, null);
 				}
-				else return false;
+				else {
+					System.out.println("File contains ID #" + (index+1) + " more than once (see line #" + (i+1) + ").");
+					return false;
+				}
 			}
 			cost /= machines.get(i).getSpeed();
 			if(cost > maxCost) maxCost = cost;
 		}
-		System.out.println("here");
 		Double theirMax = Double.parseDouble(in.nextLine());
 		in.close();
-		if(Math.abs(theirMax - maxCost) > 0.0001) return false;
-		System.out.println("and here");
 		for(Task t : tasks) {
-			if(t != null) return false;
+			if(t != null) {
+				System.out.println("Task #" + t.id + " is never used.");
+				return false;
+			}
 		}
+		if(Math.abs(theirMax - maxCost) > 0.01) {
+			System.out.println("The given output is never achieved.");
+			System.out.println("Their output is " + theirMax);
+			System.out.println("The max output is " + maxCost);
+			return false;
+		}
+		System.out.println("Validated!");
+		//System.out.println("Their output is " + theirMax);
+		//System.out.println("The max output is " + maxCost);
 		return true;
 	}
 
@@ -162,7 +176,6 @@ public class Demo {
 		demo.output();
 		//demo.printOutput();
 		boolean isWorking = demo.validate("ourOutput.txt");
-		System.out.println(isWorking);
 	}
 
 }
