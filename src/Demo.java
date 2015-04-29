@@ -10,7 +10,7 @@ public class Demo {
 	
 	public Demo() {
 		super();
-		fileName = "ourInput.txt";
+		fileName = "input.txt";
 		readFromFile(fileName);
 	}
 	
@@ -53,11 +53,14 @@ public class Demo {
 		}
 	}
 	
-	public int optimize() {
+	public Double optimize() {
 		Collections.sort(tasks);
 		Collections.sort(machines);
 		Collections.reverse(tasks);
-		Algorithms.binaryAssign(machines, tasks);
+		Algorithms.altAlgo(machines, tasks);
+		//Algorithms.binaryAssign(machines, tasks);
+		//Collections.sort(machines);
+		//Algorithms.normMachines(machines);
 		return Algorithms.getMax(machines);
 	}
 	
@@ -104,7 +107,7 @@ public class Demo {
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		}
-		int max = optimize();
+		Double max = optimize();
 		for(Machine m : inOrderMachines) {
 			for(Task t : m.getTasks()) {
 				out.print(t.id);
@@ -112,7 +115,7 @@ public class Demo {
 			}
 			out.print("\n");
 		}
-		out.println(max);
+		out.printf("%.2f", max);
 		out.close();
 	}
 	
@@ -142,9 +145,11 @@ public class Demo {
 			cost /= machines.get(i).getSpeed();
 			if(cost > maxCost) maxCost = cost;
 		}
-		int theirMax = Integer.parseInt(in.nextLine());
+		System.out.println("here");
+		Double theirMax = Double.parseDouble(in.nextLine());
 		in.close();
 		if(Math.abs(theirMax - maxCost) > 0.0001) return false;
+		System.out.println("and here");
 		for(Task t : tasks) {
 			if(t != null) return false;
 		}
@@ -155,6 +160,7 @@ public class Demo {
 		Demo demo = new Demo();
 		//demo.createInput();
 		demo.output();
+		//demo.printOutput();
 		boolean isWorking = demo.validate("ourOutput.txt");
 		System.out.println(isWorking);
 	}

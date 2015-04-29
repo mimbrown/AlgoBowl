@@ -4,13 +4,13 @@ import java.util.*;
 public class Machine implements Comparable {
 	private Integer speed;
 	private List<Task> tasks;
-	private Integer processTime;
+	private Double processTime;
 	
 	public Machine(Integer speed) {
 		super();
 		this.speed = speed;
 		tasks = new ArrayList<Task>();
-		processTime = 0;
+		processTime = 0.0;
 	}
 	
 	public void addTasks(List<Task> tasks) {
@@ -19,19 +19,23 @@ public class Machine implements Comparable {
 	}
 	
 	public void calcProcessTime() {
-		processTime = 0;
+		processTime = 0.0;
 		for(Task i : tasks) {
 			processTime += i.value;
 		}
 		processTime /= speed;
 	}
 	
-	public int getProcessTime() {
+	public Double getProcessTime() {
 		return processTime;
 	}
 	
 	public int getSpeed() {
 		return speed;
+	}
+	
+	public void clearTasks() {
+		tasks.clear();
 	}
 	
 	public List<Task> getTasks() {
